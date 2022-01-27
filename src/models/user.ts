@@ -4,8 +4,15 @@ import bcrypt from 'bcrypt';
 
 
 export interface IUser extends Document {
+    username: string
     email: string
-    props: () => {}
+    firstname: string
+    lastname: string
+    passwordHash: string
+    imgPath: string
+    loginAttempts: number
+    movies: []
+    timestamps: Date
 }
 
 const UserSchema = new Schema({
