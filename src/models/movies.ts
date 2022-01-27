@@ -4,7 +4,9 @@ export interface IMovies extends Document {
     name: string
     description: string
     srcImg: string
-    rate: string
+    rate: number
+    category: string
+    sentence: string
 }
 
 const moviesSchema = new Schema({
@@ -16,7 +18,8 @@ const moviesSchema = new Schema({
         type: String
     },
     srcImg: {
-        type: String
+        type: String,
+        lowercase: true
     },
     rate: {
         type: Number
