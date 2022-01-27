@@ -1,0 +1,3 @@
+# node artifact facts
+node_modules/
+dist/
