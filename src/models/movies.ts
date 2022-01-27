@@ -9,7 +9,7 @@ export interface IMovies extends Document {
     sentence: string
 }
 
-const moviesSchema = new Schema({
+const MoviesSchema = new Schema({
     name: {
         type: String,
         unique: true
@@ -32,4 +32,4 @@ const moviesSchema = new Schema({
     }
 })
 
-export default model<IMovies>('Movies', moviesSchema)
+export default model<IMovies>('Movies', MoviesSchema)

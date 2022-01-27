@@ -35,6 +35,10 @@ const UserSchema = new Schema({
     },
     imgPath: String,
     loginAttempts: Number,
+    movies: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Movies'
+    }],
     
 },{
     timestamps: true
