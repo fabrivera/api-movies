@@ -3,8 +3,7 @@ import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
 // Routes Libreries
-import movesRouter from './routes/movies.routes';
-;
+import usersRouter from './routes/users.routes'
 
 
 const app = express() // Starting express
@@ -19,6 +18,7 @@ app.use(express.urlencoded({extended: false}))
 app.use(express.json())
 
 // Routes
+app.use('/users', usersRouter)
 
 
 export default app
