@@ -2,8 +2,10 @@
 import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
+import passport from 'passport'
+import passportMiddleware from './middlewares/passport'
 // Routes Libreries
-import usersRouter from './routes/user.routes'
+import router from './routes'
 
 
 const app = express() // Starting express
@@ -16,9 +18,11 @@ app.use(morgan('dev'))
 app.use(cors())
 app.use(express.urlencoded({extended: false}))
 app.use(express.json())
+app.use(passport.initialize())
+passport.use(passportMiddleware)
 
-// Routes
-app.use('/api', usersRouter)
+// Go routes
+app.use('/api', router)
 
 
 export default app

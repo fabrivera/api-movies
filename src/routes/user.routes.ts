@@ -4,16 +4,13 @@ import userCtrl from '../controllers/user.controller'
 const router = Router() // Starting Router
 
 // User functions
-const { getUsers, createUser } = userCtrl
-// Movies in user list functions
-const { addMovieToList, returnAllList } = userCtrl
+const { getUsers, createUser, signIn } = userCtrl
 
-router.route('/user')
+router.route('/')
     .get(getUsers)
     .post(createUser)
 
-router.route('/userlist')
-    .post(returnAllList)
-    .put(addMovieToList)
+router.route('/login')
+    .post(signIn)
 
 export default router

@@ -1,6 +1,5 @@
 import { model, models, Schema, Document } from 'mongoose'
-import bcrypt from 'bcrypt';
-;
+import bcrypt from 'bcrypt'
 
 
 export interface IUser extends Document {
@@ -13,9 +12,10 @@ export interface IUser extends Document {
     loginAttempts: number
     movies: []
     timestamps: Date
+    comparePassword: (password: string) => Promise<boolean>
 }
 
-const UserSchema = new Schema({
+const userSchema = new Schema({
     username: {
         type: String,
         required: true,
@@ -51,19 +51,19 @@ const UserSchema = new Schema({
     timestamps: true
 })
 
-UserSchema.pre('save', async function(next){
+userSchema.pre('save', async function(next){
     if (!this.isModified('passwordHash')) return next()
     const saltRounds = 10
     this.passwordHash = await bcrypt.hash(this.passwordHash, saltRounds)
     next()
 })
 
-UserSchema.path('email').validate(async(email: string)=>{
+userSchema.path('email').validate(async(email: string)=>{
     const emailcount = await models.User.countDocuments({email})
     return !emailcount
 }, 'Email already exits')
 
-UserSchema.methods.comparePassword = async function(password: string) {
+userSchema.methods.comparePassword = async function(password: string) {
     const comparePassword = await bcrypt.compare(password, this.passwordHash)
 
     let sendResults: {} = {autorization: comparePassword}
@@ -91,4 +91,8 @@ UserSchema.methods.comparePassword = async function(password: string) {
     return sendResults
 }
 
-export default model<IUser>('User', UserSchema)
+userSchema.methods.comparePassword = async function (password: string): Promise<boolean> {
+    return await bcrypt.compare(password, this.passwordHash)
+}
+
+export default model<IUser>('User', userSchema)

@@ -1,16 +1,25 @@
 import { Request, Response } from 'express'
-import Users from '../models/Users'
-import User from '../models/Users'
+import User, { IUser } from '../models/Users'
+import jwt from 'jsonwebtoken'
+import config from '../config/config'
 
 interface IUserCtrl {
     [key: string]: (req: Request, res: Response) => {}
 }
-
+function createToken(user: IUser) {
+    return jwt.sign({
+        id: user.id,
+        username: user.username,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        movies: user.movies
+    }, config.jwtSecret) 
+}
 const userCtrl: IUserCtrl = {}
 
 //Get all users
 userCtrl.getUsers = async (req, res): Promise<Response> => {
-    const user = await Users.find({})
+    const user = await User.find({})
     return res.status(200).json(user)
 }
 
@@ -45,34 +54,24 @@ userCtrl.createUser = async (req, res): Promise<Response> => {
 }
 
 // Login
-
-// Add a movie to my list
-userCtrl.addMovieToList = async (req, res): Promise<Response> => {
-    const { movieId } = req.body
-    const _id = req.body.userId
-    const user = await User.findOneAndUpdate({_id}, { "$push": { "movies": { "$each": [movieId] }}})
-
-    if (!user) {
-        return res.status(400).json({msg: 'Please login first'})
+userCtrl.signIn = async (req, res) => {
+    if (!(req.body.email || req.body.username) || !req.body.password) {
+        res.status(400).json({msg: 'Please send user and password'})
     }
 
-    return res.status(200).json({msg: 'Movie added to list'})
-}
+    const {email, username} = req.body
 
-// Remove a movie
+    const user = await User.findOne({$or: [{email}, {username}]})
 
-// Return all movies from list
-userCtrl.returnAllList = async (req, res): Promise<Response> => {
-    const _id = req.body.userId
-    const user = await User.findOne({_id})
-
-    if (!user) {
-        return res.status(400).json({msg: 'Please login first'})
+    if (user) {
+        const isMatch = await user.comparePassword(req.body.password)
+        if (isMatch) {
+            const token: string = createToken(user)
+            return res.status(200).json({msg: 'User login correct', token})
+        }
+        return res.status(401).json({msg: 'User or password was wrong'})
     }
-
-    return res.status(200).json({user: user.username, movies: user.movies})
+    return res.status(400).json({msg: 'User does not exist'})
 }
-
-// Search movies added
 
 export default userCtrl
