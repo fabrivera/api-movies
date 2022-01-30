@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import User from '../models/Users'
-import Movies from '../models/Movies'
+import Movie from '../models/Movies'
 
 
 interface IUserlistCtrl {
@@ -22,7 +22,7 @@ userlistCtrl.addMovieToList = async (req, res): Promise<Response> => {
     const { movieId } = req.body
     const _id = req.body.userId
 
-    const movie = await Movies.findOne({_id: movieId})
+    const movie = await Movie.findOne({_id: movieId})
 
     if (!movie) {
         return res.status(400).json({msg: 'Movie does not exist'})
@@ -38,7 +38,7 @@ userlistCtrl.addMovieToList = async (req, res): Promise<Response> => {
 }
 
 // Remove a movie
-userlistCtrl.removeMovie = async (req, res): Promise<Response> => {
+userlistCtrl.userlistMovieRemove = async (req, res): Promise<Response> => {
     if (!req.user) {
         return res.status(400).json({msg: 'Please login first'})
     }

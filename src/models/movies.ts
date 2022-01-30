@@ -1,4 +1,5 @@
 import { model, Schema, Document } from 'mongoose'
+const mongoosePaginate = require('mongoose-paginate-v2')
 
 export interface IMovies extends Document {
     name: string
@@ -9,7 +10,7 @@ export interface IMovies extends Document {
     sentence: string
 }
 
-const MoviesSchema = new Schema({
+const MovieSchema = new Schema({
     name: {
         type: String,
         unique: true
@@ -32,4 +33,6 @@ const MoviesSchema = new Schema({
     }
 })
 
-export default model<IMovies>('Movies', MoviesSchema)
+MovieSchema.plugin(mongoosePaginate)
+
+export default model<IMovies>('Movie', MovieSchema)

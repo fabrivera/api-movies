@@ -15,7 +15,7 @@ export interface IUser extends Document {
     comparePassword: (password: string) => Promise<boolean>
 }
 
-const userSchema = new Schema({
+const UserSchema = new Schema({
     username: {
         type: String,
         required: true,
@@ -51,19 +51,26 @@ const userSchema = new Schema({
     timestamps: true
 })
 
-userSchema.pre('save', async function(next){
+UserSchema.pre('save', async function(next){
     if (!this.isModified('passwordHash')) return next()
     const saltRounds = 10
     this.passwordHash = await bcrypt.hash(this.passwordHash, saltRounds)
     next()
 })
 
-userSchema.path('email').validate(async(email: string)=>{
+UserSchema.path('email').validate(async(email: string)=>{
     const emailcount = await models.User.countDocuments({email})
     return !emailcount
 }, 'Email already exits')
 
-userSchema.methods.comparePassword = async function(password: string) {
+UserSchema.set('toJSON', {
+    transform: (document, returnedObject) => {
+        delete returnedObject.__v
+        delete returnedObject.passwordHash
+    }
+})
+
+UserSchema.methods.comparePassword = async function(password: string) {
     const comparePassword = await bcrypt.compare(password, this.passwordHash)
 
     let sendResults: {} = {autorization: comparePassword}
@@ -91,8 +98,8 @@ userSchema.methods.comparePassword = async function(password: string) {
     return sendResults
 }
 
-userSchema.methods.comparePassword = async function (password: string): Promise<boolean> {
+UserSchema.methods.comparePassword = async function (password: string): Promise<boolean> {
     return await bcrypt.compare(password, this.passwordHash)
 }
 
-export default model<IUser>('User', userSchema)
+export default model<IUser>('User', UserSchema)
