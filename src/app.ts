@@ -1,5 +1,6 @@
 // Libreries
 import express from 'express'
+import path from 'path'
 import morgan from 'morgan'
 import cors from 'cors'
 import passport from 'passport'
@@ -23,6 +24,9 @@ passport.use(passportMiddleware)
 
 // Go routes
 app.use('/api', router)
+
+// Public files folder
+app.use('/uploads', express.static(path.resolve('uploads')))
 
 
 export default app
