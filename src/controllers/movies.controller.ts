@@ -40,7 +40,7 @@ moviesCtrl.addMovie = async (req, res): Promise<Response> => {
 
 // Get all movies
 moviesCtrl.getMovies = async (req, res): Promise<Response> => {
-    const movies = Movie.findOne({})
+    const movies = await Movie.find({})
     return res.status(200).send(movies)
 }
 
