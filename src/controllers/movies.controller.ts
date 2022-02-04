@@ -16,7 +16,7 @@ moviesCtrl.addMovie = async (req, res): Promise<Response> => {
             res.status(400).json({msg: 'Please send user and password'})
     }
     
-    const {name, description, category, sentence} = req.body
+    const {name, description, category, sentence, rate = 0} = req.body
 
     let srcImg = ''
     if (!req.file || !req.file.path)  {
@@ -30,7 +30,8 @@ moviesCtrl.addMovie = async (req, res): Promise<Response> => {
         description,
         srcImg,
         category,
-        sentence
+        sentence,
+        rate
     })
 
     await newMovie.save()
