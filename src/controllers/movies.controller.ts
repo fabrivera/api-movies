@@ -28,7 +28,7 @@ moviesCtrl.addMovie = async (req, res): Promise<Response> => {
     const newMovie: IMovies = new Movie({
         name,
         description,
-        srcImg,
+        srcImg: `https://movies-folcademy.herokuapp.com/${srcImg}`,
         category,
         sentence,
         rate
