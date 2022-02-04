@@ -6,10 +6,11 @@ import moviesCtrl from '../controllers/movies.controller'
 
 const router = Router() // Starting Router
 
-const { addMovie, getMovies } = moviesCtrl
+const { addMovie, search, getMoviesPaginated } = moviesCtrl
 
 router.route('/')
-    .get(getMovies)
+    .get(getMoviesPaginated)
     .post(multer({storage}).single('image'), addMovie)
+    .put(search)
 
 export default router

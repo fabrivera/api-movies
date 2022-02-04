@@ -21,10 +21,12 @@ app.listen(port, () => {
     database.once('open', () => {
         message('conn','     Database:','MongoDB Connected')
         message('finish')
+        console.log('\n')
     })
     database.on('error', err => {
         message('err','     Database:', 'Could not connect')
         message('finish')
+        console.log('\n')
         process.exit(0)
     })
 }).on('error', (e) => {
