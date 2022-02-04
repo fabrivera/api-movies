@@ -26,7 +26,7 @@ app.listen(port, () => {
     database.on('error', err => {
         message('err','     Database:', 'Could not connect')
         message('finish')
-        console.log('\n')
+        console.log('\n', err)
         process.exit(0)
     })
 }).on('error', (e) => {
