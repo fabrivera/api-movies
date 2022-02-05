@@ -12,7 +12,7 @@ import router from './routes'
 const app = express() // Starting express
 
 // Settings
-const _app_folder = 'dist/desafio2';
+const _app_folder = 'page';
 app.set('port', process.env.PORT || "4000")
 // ---- SERVE STATIC FILES ---- //
 app.get('*.*', express.static(_app_folder));
