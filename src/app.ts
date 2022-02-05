@@ -12,7 +12,10 @@ import router from './routes'
 const app = express() // Starting express
 
 // Settings
+const _app_folder = 'dist/desafio2';
 app.set('port', process.env.PORT || "4000")
+// ---- SERVE STATIC FILES ---- //
+app.get('*.*', express.static(_app_folder));
 
 // Middlewares
 app.use(morgan('dev'))
@@ -23,6 +26,9 @@ app.use(passport.initialize())
 passport.use(passportMiddleware)
 
 // Go routes
+app.all('/', function (req, res) {
+    res.status(200).sendFile(`/`, {root: _app_folder});
+});
 app.use('/api', router)
 
 // Public files folder
