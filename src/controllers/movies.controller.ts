@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import Movie, { IMovies } from '../models/Movies'
+import cloudinary from '../libs/cloudinary'
 
 interface IMoviesCtrl {
     [key: string]: (req: Request, res: Response) => {}
@@ -18,17 +19,18 @@ moviesCtrl.addMovie = async (req, res): Promise<Response> => {
     
     const {name, description, category, sentence, rate = 0} = req.body
 
-    let srcImg = ''
+    let url = ''
     if (!req.file || !req.file.path)  {
         res.status(400).json({msg: 'Image could not be upload'})
     } else {
-        srcImg = req.file.path
+        url = req.file.path
     }
+    const srcImg = await cloudinary(url)
 
-    const newMovie: IMovies = new Movie({
+    const newMovie: IMovies = await new Movie({
         name,
         description,
-        srcImg: `https://movies-folcademy.herokuapp.com/${srcImg}`,
+        srcImg,
         category,
         sentence,
         rate
